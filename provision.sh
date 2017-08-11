@@ -21,6 +21,8 @@ echo 10.0.15.120 web01.node	web01 >> /etc/hosts
 
 #Disable root ssh login 
 sed -i 's/^#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+#Add puppet to secure path in sudoers
+sed -i '/^Defaults    secure_path/ s/$/:\/opt\/puppetlabs\/bin/' /etc/sudoers
 
 systemctl start firewalld.service
 sleep 10
@@ -28,3 +30,5 @@ firewall-cmd --permanent --zone=public --add-interface=eth1
 firewall-cmd --zone=public --permanent --add-port=8140/tcp
 systemctl enable firewalld.service
 
+#Generate key
+ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
